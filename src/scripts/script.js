@@ -27,7 +27,6 @@ function onSubmit(event) {
   if (value === '') {
     Notify.failure('No value!');
   } else {
-    Notify.success(`Hooray! We found 500 images.`);
     imagesService.searchQuery = value;
     imagesService.resetPage();
 
@@ -42,11 +41,7 @@ async function fetchImages() {
 
   try {
     const markup = await getImagesMarkup();
-    if (!markup) {
-      Notify.warning(
-        `We're sorry, but you've reached the end of search results.`
-      );
-    }
+    if (!markup) throw new Error('No data');
     updateImagesList(markup);
   } catch (err) {
     onError(err);
@@ -60,11 +55,14 @@ async function getImagesMarkup() {
     const images = await imagesService.getImages();
 
     if (images.length === 0) {
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again'
+      );
       loadMoreBtn.hide();
       return '';
+    } else {
+      return images.reduce((markup, image) => markup + createMarkup(image), '');
     }
-
-    return images.reduce((markup, image) => markup + createMarkup(image), '');
   } catch (err) {
     onError(err);
   }
@@ -117,19 +115,6 @@ function clearImagesList() {
 }
 
 function onError(err) {
-  console.error(err);
   loadMoreBtn.hide();
-  Notify.failure(
-    'Sorry, there are no images matching your search query. Please try again'
-  );
 }
 
-// function handleScroll() {
-//   const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-
-//   if (scrollTop + clientHeight >= scrollHeight - 5) {
-//     fetchImages();
-//   }
-// }
-
-// window.addEventListener("scroll", handleScroll);
