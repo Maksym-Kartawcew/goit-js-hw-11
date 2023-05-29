@@ -50,27 +50,26 @@ async function fetchImages() {
 
   loadMoreBtn.enable();
 }
-
-let totalHits = 0
 const per_page = 40;
 
 
 function onLoadMore(event) {
   event.preventDefault();
-  totalHits = imagesService.totalHits
+  const totalImages = imagesService.totalHits
+  const maxPage = Math.ceil(totalImages / per_page );
 
-  if (Math.ceil(totalHits / per_page) > imagesService.page) {
-    imagesService.page += 1;
+  if (maxPage > imagesService.page) {
+    imagesService.incrementPage()
     loadMoreBtn.show();
     fetchImages()
       }
     
    else {
- 
-    loadMoreBtn.end();
+    imagesService.page = 0;
+
+     loadMoreBtn.end();
     Notiflix.Notify.warning(
       "We're sorry, but you've reached the end of search results."
-
     );
   }
 }
