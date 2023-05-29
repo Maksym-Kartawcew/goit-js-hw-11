@@ -17,7 +17,7 @@ const loadMoreBtn = new LoadMoreBtn({
 });
 
 refs.form.addEventListener('submit', onSubmit);
-loadMoreBtn.button.addEventListener('click', fetchImages);
+loadMoreBtn.button.addEventListener('click', onLoadMore);
 
 function onSubmit(event) {
   event.preventDefault();
@@ -36,6 +36,7 @@ function onSubmit(event) {
   }
 }
 
+
 async function fetchImages() {
   loadMoreBtn.disable();
 
@@ -49,6 +50,33 @@ async function fetchImages() {
 
   loadMoreBtn.enable();
 }
+
+let totalHits = 0
+const per_page = 40;
+
+
+function onLoadMore(event) {
+  event.preventDefault();
+  totalHits = imagesService.totalHits
+
+  if (Math.ceil(totalHits / per_page) > imagesService.page) {
+    imagesService.page += 1;
+    loadMoreBtn.show();
+    fetchImages()
+      }
+    
+   else {
+ 
+    loadMoreBtn.end();
+    Notiflix.Notify.warning(
+      "We're sorry, but you've reached the end of search results."
+
+    );
+  }
+}
+
+
+
 
 async function getImagesMarkup() {
   try {
