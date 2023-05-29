@@ -32,7 +32,7 @@ function onSubmit(event) {
 
     loadMoreBtn.show();
     clearImagesList();
-    fetchImages().finally(() => form.reset());
+    fetchImages()
   }
 }
 
