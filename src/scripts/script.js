@@ -32,10 +32,9 @@ function onSubmit(event) {
 
     loadMoreBtn.show();
     clearImagesList();
-    fetchImages()
+    fetchImages();
   }
 }
-
 
 async function fetchImages() {
   loadMoreBtn.disable();
@@ -52,30 +51,23 @@ async function fetchImages() {
 }
 const per_page = 40;
 
-
 function onLoadMore(event) {
   event.preventDefault();
-  const totalImages = imagesService.totalHits
-  const maxPage = Math.ceil(totalImages / per_page );
+  const totalImages = imagesService.totalHits;
+  const maxPage = Math.ceil(totalImages / per_page) + 1;
 
   if (maxPage > imagesService.page) {
-    imagesService.incrementPage()
     loadMoreBtn.show();
-    fetchImages()
-      }
-    
-   else {
+    fetchImages();
+  } else {
     imagesService.page = 0;
 
-     loadMoreBtn.end();
+    loadMoreBtn.end();
     Notiflix.Notify.warning(
       "We're sorry, but you've reached the end of search results."
     );
   }
 }
-
-
-
 
 async function getImagesMarkup() {
   try {
@@ -144,4 +136,3 @@ function clearImagesList() {
 function onError(err) {
   loadMoreBtn.hide();
 }
-
