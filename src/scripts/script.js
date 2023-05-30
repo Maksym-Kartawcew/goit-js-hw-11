@@ -47,7 +47,13 @@ async function fetchImages() {
     onError(err);
   }
 
-  loadMoreBtn.enable();
+  if (imagesService.totalHits > 40){
+    loadMoreBtn.enable();
+  }
+  else {
+    loadMoreBtn.end();
+  }
+
 }
 const per_page = 40;
 
